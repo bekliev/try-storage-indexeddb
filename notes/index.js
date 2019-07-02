@@ -52,7 +52,7 @@ window.onload = function () {
 
         db = request.result;
 
-        // displayData();
+        displayData();
     }
 
     elForm.onsubmit = addData;
@@ -89,12 +89,74 @@ function addData(event) {
     transaction.oncomplete = function () {
         console.group('transaction.oncomplete: Database modification finished.')
         console.log('update the display of data to show the newly added item, by running displayData() again.');
-        // displayData()
+        displayData();
         console.groupEnd();
     }
 
     transaction.onerror = function () {
         const text = 'transaction.onerror: Transaction not opened due to error';
         alert(text); console.log(text);
+    }
+}
+
+function displayData() {
+    console.group('displayData');
+
+    console.log('Removing all list items');
+    while (elList.firstChild) {
+        elList.removeChild(elList.firstChild);
+    }
+
+    console.log('Fetching and rendering all notes');
+    const objectStore = db.transaction(storeName).objectStore(storeName);
+    objectStore.openCursor().onsuccess = function (event) {
+        const cursor = event.target.result;
+
+        if (!cursor) {
+            if (!elList.firstChild) {
+                const text = 'There has not data in this store yet.';
+                const listItem = document.createElement('li');
+                listItem.textContent = text;
+                console.log(text);
+
+                elList.appendChild(listItem);
+            }
+
+            console.log('All notes has been displayed!');
+            console.groupEnd();
+        } else {
+            // Create elements
+            const el = {
+                li: document.createElement('li'),
+                h3: document.createElement('h3'),
+                p: document.createElement('p'),
+                button: document.createElement('button'),
+            };
+
+            // Map the data
+            const data = {
+                id: cursor.value.id,
+                title: cursor.value.title,
+                description: cursor.value.description,
+            };
+
+            // Fullfill elements with data
+            el.li.setAttribute('data-note-id', data.id);
+            el.h3.textContent = '[' + data.id + '] ' + data.title;
+            el.p.textContent = data.description;
+            el.button.textContent = 'Delete';
+
+            // Event handlers
+            // el.button.onclick = deleteNote;
+
+            // Insert elements into the DOM
+            el.li.appendChild(el.h3);
+            el.li.appendChild(el.p);
+            el.li.appendChild(el.button);
+            elList.appendChild(el.li);
+
+            // Iterate to the next item in the cursor
+            cursor.continue();
+        }
     }
 }
