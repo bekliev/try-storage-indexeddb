@@ -6,6 +6,7 @@ const elSubmitBtn = document.querySelector('form button');
 
 const dbName = 'notes_db';
 const storeName = 'notes_os';
+const idAttribute = 'data-note-id';
 
 let db;
 
@@ -99,6 +100,29 @@ function addData(event) {
     }
 }
 
+function deleteNote(event) {
+    console.group('Delete note');
+
+    const elParent = event.target.parentNode;
+
+    const noteId = Number(elParent.getAttribute(idAttribute));
+    console.log({ noteId: noteId });
+
+    const transaction = db.transaction(storeName, 'readwrite');
+    const objectStore = transaction.objectStore(storeName);
+    const request = objectStore.delete(noteId);
+
+    transaction.oncomplete = function () {
+        elList.removeChild(elParent);
+
+        console.log('Note has been deleted');
+
+        if (!elList.firstChild) showPlaceholder();
+
+        console.groupEnd();
+    }
+}
+
 function displayData() {
     console.group('displayData');
 
@@ -113,14 +137,7 @@ function displayData() {
         const cursor = event.target.result;
 
         if (!cursor) {
-            if (!elList.firstChild) {
-                const text = 'There has not data in this store yet.';
-                const listItem = document.createElement('li');
-                listItem.textContent = text;
-                console.log(text);
-
-                elList.appendChild(listItem);
-            }
+            if (!elList.firstChild) showPlaceholder();
 
             console.log('All notes has been displayed!');
             console.groupEnd();
@@ -141,13 +158,13 @@ function displayData() {
             };
 
             // Fullfill elements with data
-            el.li.setAttribute('data-note-id', data.id);
+            el.li.setAttribute(idAttribute, data.id);
             el.h3.textContent = '[' + data.id + '] ' + data.title;
             el.p.textContent = data.description;
             el.button.textContent = 'Delete';
 
             // Event handlers
-            // el.button.onclick = deleteNote;
+            el.button.onclick = deleteNote;
 
             // Insert elements into the DOM
             el.li.appendChild(el.h3);
@@ -159,4 +176,13 @@ function displayData() {
             cursor.continue();
         }
     }
+}
+
+function showPlaceholder() {
+    const text = 'There has not data in this store yet.';
+    const listItem = document.createElement('li');
+    listItem.textContent = text;
+    console.log(text);
+
+    elList.appendChild(listItem);
 }
