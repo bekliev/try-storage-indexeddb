@@ -10,54 +10,54 @@ const idAttribute = 'data-note-id';
 
 let db;
 
-window.onload = function () {
-    let request = window.indexedDB.open(dbName, 1);
+// window.onload = function () {
+let request = window.indexedDB.open(dbName, 1);
 
-    request.onerror = function () {
-        const text = [
-            'DB failed to open!',
-            'Command: window.indexedDB.open(dbName, 1)'
-        ].join('\n');
+request.onerror = function () {
+    const text = [
+        'DB failed to open!',
+        'Command: window.indexedDB.open(dbName, 1)'
+    ].join('\n');
 
-        console.log(text);
-        alert(text);
-    }
-
-    request.onupgradeneeded = function (event) {
-        console.group('onupgradeneeded');
-
-        const db = event.target.result;
-
-        console.group('Create an objectStore to store our notes in (basically like a single table), including a auto-incrementing key');
-
-        const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
-        console.log("> objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });");
-
-        console.group('Define what data items the objectStore will contain');
-        objectStore.createIndex('title', 'title', { unique: false });
-        console.log("> objectStore.createIndex('title', 'title', { unique: false })");
-
-        objectStore.createIndex('description', 'description', { unique: false });
-        console.log("> objectStore.createIndex('description', 'description', { unique: false })");
-        console.groupEnd();
-
-        console.groupEnd();
-
-        console.log('Database setup complete');
-        console.groupEnd();
-    }
-
-    request.onsuccess = function () {
-        const text = 'DB has opened successfully!';
-        console.log(text);
-
-        db = request.result;
-
-        displayData();
-    }
-
-    elForm.onsubmit = addData;
+    console.log(text);
+    alert(text);
 }
+
+request.onupgradeneeded = function (event) {
+    console.group('onupgradeneeded');
+
+    const db = event.target.result;
+
+    console.group('Create an objectStore to store our notes in (basically like a single table), including a auto-incrementing key');
+
+    const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+    console.log("> objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });");
+
+    console.group('Define what data items the objectStore will contain');
+    objectStore.createIndex('title', 'title', { unique: false });
+    console.log("> objectStore.createIndex('title', 'title', { unique: false })");
+
+    objectStore.createIndex('description', 'description', { unique: false });
+    console.log("> objectStore.createIndex('description', 'description', { unique: false })");
+    console.groupEnd();
+
+    console.groupEnd();
+
+    console.log('Database setup complete');
+    console.groupEnd();
+}
+
+request.onsuccess = function () {
+    const text = 'DB has opened successfully!';
+    console.log(text);
+
+    db = request.result;
+
+    displayData();
+}
+
+elForm.onsubmit = addData;
+// }
 
 function addData(event) {
     console.group('Submited');
