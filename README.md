@@ -1,3 +1,3 @@
 # Demos
-1. [Notes](http://htmlpreview.github.io/?https://github.com/bekliev/try-storage-indexeddb/blob/master/notes/index.html)
-<!-- 2. [Video Offline](http://htmlpreview.github.io/?https://github.com/bekliev/try-storage-indexeddb/video-offline/index.html) -->
+1. [Notes](https://bekliev.github.io/try-storage-indexeddb/notes/)
+<!-- 2. [Video Offline](https://bekliev.github.io/try-storage-indexeddb/video-offline/) -->
