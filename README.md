@@ -1,2 +1,3 @@
-# try-storage-indexeddb
-By guide: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Client-side_storage#Getting_started
+# Demos
+1. [Notes](https://github.com/bekliev/try-storage-indexeddb/notes/index.html)
+<!-- 2. [Video Offline](https://github.com/bekliev/try-storage-indexeddb/video-offline/index.html) -->
